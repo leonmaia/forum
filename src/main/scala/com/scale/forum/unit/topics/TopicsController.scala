@@ -1,5 +1,6 @@
-package com.scale.forum.topics
+package com.scale.forum.unit.topics
 
+import com.scale.forum.unit.topics.domain.http.TopicPostRequest
 import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
 import javax.inject.Inject
@@ -7,10 +8,10 @@ import javax.inject.Inject
 class TopicsController @Inject()(topics: TopicsService) extends Controller {
 
   post("/topics") { topic: TopicPostRequest =>
-    response.created(topics.save(topic))
+    topics.save(topic).map(response.created)
   }
 
   get("/topics") { _: Request =>
-    response.ok(topics.list())
+    topics.list().map(response.ok(_))
   }
 }

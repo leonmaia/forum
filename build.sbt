@@ -52,7 +52,7 @@ assemblyMergeStrategy in assembly := {
   case other => MergeStrategy.defaultMergeStrategy(other)
 }
 
-assemblyJarName in assembly := s"orgs.jar"
+assemblyJarName in assembly := s"scale.jar"
 
 libraryDependencies ++= Seq(
 
@@ -79,5 +79,5 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-core" % "1.9.5" % "test",
   "org.scalatest" %% "scalatest" % "3.0.0" % "test",
   "org.specs2" %% "specs2-mock" % "2.4.17" % "test",
-  "org.testcontainers" % "postgresql" % "1.6.0" % "test"
+  "org.testcontainers" % "postgresql" % "1.8.3" % "test"
 )

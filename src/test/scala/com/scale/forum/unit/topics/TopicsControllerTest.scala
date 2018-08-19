@@ -1,8 +1,11 @@
-package com.scale.forum.topics
+package com.scale.forum.unit.topics
 
 import java.util.UUID
 
+import com.scale.forum.unit.topics.domain.Topic
+import com.scale.forum.unit.topics.helpers.ControllerTest
 import com.twitter.finagle.http.Status._
+import com.twitter.util.Future
 
 class TopicsControllerTest extends ControllerTest {
 
@@ -13,7 +16,7 @@ class TopicsControllerTest extends ControllerTest {
 
   describe("adding topics") {
     it("should return http 201 with topic") {
-      mockTopics.save(any) returns topics.head
+      mockTopics.add(any) returns Future(1)
 
       server.httpPost(
         path = "/topics",
@@ -25,16 +28,8 @@ class TopicsControllerTest extends ControllerTest {
               "body": "Just a test"
             }
             """,
-        andExpect = Created,
-        withJsonBody =
-          s"""
-            {
-              "id": "${topics.head.id}",
-              "email": "${topics.head.email}",
-              "title": "${topics.head.title}",
-              "body": "${topics.head.body}"
-            }
-            """)
+        andExpect = Created
+        )
     }
 
     it("should return http 400 with errors object") {
@@ -62,7 +57,7 @@ class TopicsControllerTest extends ControllerTest {
 
   describe("listing topics") {
     it("should return http 200 with topics") {
-      mockTopics.list() returns topics
+      mockTopics.list() returns Future(topics)
 
       server.httpGet(
         path = "/topics",
@@ -71,5 +66,4 @@ class TopicsControllerTest extends ControllerTest {
       )
     }
   }
-
 }

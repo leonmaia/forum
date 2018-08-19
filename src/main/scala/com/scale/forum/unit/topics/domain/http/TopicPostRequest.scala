@@ -1,6 +1,8 @@
-package com.scale.forum.topics
+package com.scale.forum.unit.topics.domain.http
 
 import java.util.UUID
+
+import com.scale.forum.unit.topics.domain.Topic
 
 case class TopicPostRequest(email: String, title: String, body: String) {
 

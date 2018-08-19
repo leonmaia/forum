@@ -1,4 +1,4 @@
-package com.scale.forum.topics
+package com.scale.forum.unit.topics.helpers
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.databind.{ObjectMapper, PropertyNamingStrategy}
@@ -6,6 +6,7 @@ import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.google.inject.Stage
 import com.scale.forum.server.Server
+import com.scale.forum.unit.topics.persistence.Topics
 import com.twitter.finatra.http.{EmbeddedHttpServer, HttpTest}
 import com.twitter.inject.server.FeatureTestMixin
 import org.scalatest.FunSpec
@@ -42,6 +43,7 @@ trait ControllerTest extends FunSpec with Mockito with FeatureTestMixin with Htt
 
   override val server: EmbeddedHttpServer = new EmbeddedHttpServer(
     twitterServer = new Server {
+      override val modules = Seq()
     },
     disableTestLogging = true,
     stage = Stage.DEVELOPMENT,
