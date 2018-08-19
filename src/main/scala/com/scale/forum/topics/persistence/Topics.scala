@@ -1,8 +1,8 @@
-package com.scale.forum.unit.topics.persistence
+package com.scale.forum.topics.persistence
 
 import java.util.UUID
 
-import com.scale.forum.unit.topics.domain.Topic
+import com.scale.forum.topics.domain.Topic
 import com.twitter.finagle.postgres.PostgresClient
 import com.twitter.inject.Logging
 import com.twitter.util.Future

@@ -1,4 +1,4 @@
-package com.scale.forum.unit.topics.domain
+package com.scale.forum.topics.domain
 
 import java.util.UUID
 

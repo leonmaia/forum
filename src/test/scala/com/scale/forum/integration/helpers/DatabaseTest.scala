@@ -31,7 +31,7 @@ object InjectorProvider {
 
   val value: Injector =
     TestInjector(flags = dbConfig, modules = Seq(DatabaseProvider))
-      .bind[StatsReceiver](NullStatsReceiver)
+      .bind[StatsReceiver].toInstance(NullStatsReceiver)
       .create
 }
 

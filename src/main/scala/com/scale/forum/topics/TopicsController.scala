@@ -1,6 +1,6 @@
-package com.scale.forum.unit.topics
+package com.scale.forum.topics
 
-import com.scale.forum.unit.topics.domain.http.TopicPostRequest
+import com.scale.forum.topics.domain.http.TopicPostRequest
 import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
 import javax.inject.Inject

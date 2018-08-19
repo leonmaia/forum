@@ -3,8 +3,8 @@ package com.scale.forum.integration.topics.persistence
 import java.util.UUID
 
 import com.scale.forum.integration.helpers.DatabaseTest
-import com.scale.forum.unit.topics.domain.Topic
-import com.scale.forum.unit.topics.persistence.Topics
+import com.scale.forum.topics.domain.Topic
+import com.scale.forum.topics.persistence.Topics
 import com.twitter.util.Await.result
 
 class TopicsTest extends DatabaseTest {

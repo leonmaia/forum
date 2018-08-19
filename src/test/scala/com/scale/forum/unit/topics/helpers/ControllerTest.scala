@@ -6,7 +6,7 @@ import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.google.inject.Stage
 import com.scale.forum.server.Server
-import com.scale.forum.unit.topics.persistence.Topics
+import com.scale.forum.topics.persistence.Topics
 import com.twitter.finatra.http.{EmbeddedHttpServer, HttpTest}
 import com.twitter.inject.server.FeatureTestMixin
 import org.scalatest.FunSpec

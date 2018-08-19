@@ -2,7 +2,7 @@ package com.scale.forum.unit.topics
 
 import java.util.UUID
 
-import com.scale.forum.unit.topics.domain.Topic
+import com.scale.forum.topics.domain.Topic
 import com.scale.forum.unit.topics.helpers.ControllerTest
 import com.twitter.finagle.http.Status._
 import com.twitter.util.Future
