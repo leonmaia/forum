@@ -1,0 +1,11 @@
+dist: trusty
+language: scala
+
+scala:
+  - 2.12.6
+
+jdk:
+  - oraclejdk8
+
+script:
+  - sbt ++$TRAVIS_SCALA_VERSION coverage test
