@@ -1,5 +1,6 @@
 package com.scale.forum.server
 
+import com.scale.forum.topics.TopicsController
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finatra.http.HttpServer
 import com.twitter.finatra.http.filters.{CommonFilters, LoggingMDCFilter, TraceIdMDCFilter}
@@ -15,5 +16,6 @@ class Server extends HttpServer with Logging {
       .filter[LoggingMDCFilter[Request, Response]]
       .filter[TraceIdMDCFilter[Request, Response]]
       .filter[CommonFilters]
+      .add[TopicsController]
   }
 }
