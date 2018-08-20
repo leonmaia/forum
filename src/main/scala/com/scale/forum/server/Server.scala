@@ -1,6 +1,7 @@
 package com.scale.forum.server
 
 import com.scale.forum.provider.DatabaseProvider
+import com.scale.forum.replies.ReplyController
 import com.scale.forum.server.migration.MigrationHandler
 import com.scale.forum.topics.TopicController
 import com.twitter.finagle.http.{Request, Response}
@@ -21,6 +22,7 @@ class Server extends HttpServer with Logging {
       .filter[TraceIdMDCFilter[Request, Response]]
       .filter[CommonFilters]
       .add[TopicController]
+      .add[ReplyController]
   }
 
   override def warmup(): Unit = {
