@@ -1,15 +1,12 @@
+--- 
 dist: trusty
-language: scala
 sudo: required
-
-scala:
-  - 2.12.6
 
 services:
   - docker
 
-jdk:
-  - oraclejdk8
-
-script:
-  - sbt ++$TRAVIS_SCALA_VERSION coverage test
+jobs:
+  include:
+    -
+      script: "sh ./ci/build-pr.sh"
+      stage: test

@@ -1,0 +1,18 @@
+version: '3'
+services:
+
+  api:
+    image: scale/forum-service
+    command: java -jar forum.jar -http.port=:7719 -forumdb.host=forumdb -forumdb.user=user -forumdb.password=pass
+    ports:
+      - "7719:7719"
+      - "9990:9990"
+    depends_on:
+      - forumdb
+
+  forumdb:
+    image: postgres:10-alpine
+    environment:
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_USER=user
+      - POSTGRES_DB=forum

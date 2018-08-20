@@ -1,0 +1,7 @@
+FROM scale/forum-ci:latest
+
+WORKDIR /opt/build
+
+ENV SBT_OPTS "-Xmx2048m -Dsbt.ivy.home=/tmp/.ivy2 -Dsbt.global.base=/tmp/.sbt"
+
+CMD ["./sbt", "coverage", "test"]
