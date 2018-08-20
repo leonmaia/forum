@@ -1,9 +1,7 @@
 package com.scale.forum.topics.persistence
 
-import java.util.UUID
-
 import com.scale.forum.topics.domain.Topic
-import com.twitter.finagle.postgres.PostgresClient
+import com.twitter.finagle.postgres.{PostgresClient, Row}
 import com.twitter.inject.Logging
 import com.twitter.util.Future
 import javax.inject.{Inject, Named, Singleton}
@@ -13,18 +11,23 @@ case class Topics @Inject()(@Named("forumdb") client: PostgresClient) extends Lo
   def add(t: Topic): Future[Int] = {
     client.prepareAndExecute(
       s"""
-         | INSERT INTO topic(id, email, title, body, timestamp)
-         | VALUES ( '${t.id}', '${t.email}', '${t.title}', '${t.body}', NOW())
+         | INSERT INTO topic(email, title, body)
+         | VALUES ('${t.email}', '${t.title}', '${t.body}')
       """.stripMargin)
   }
 
   def list(): Future[Seq[Topic]] = {
-    client.prepareAndQuery(s"SELECT * FROM topic ORDER BY timestamp DESC")(row =>
-      Topic(
-        row.get[UUID]("id"),
-        row.get[String]("email"),
-        row.get[String]("title"),
-        row.get[String]("body"))
-    )
+    client.prepareAndQuery(s"SELECT * FROM topic ORDER BY id DESC")(rowToTopic)
+  }
+
+  private def rowToTopic(row: Row): Topic = {
+    val id = row.getOption[Int]("id")
+    val email = row.get[String]("email")
+    val title = row.get[String]("title")
+    val body = row.get[String]("body")
+    Topic(id,
+      email,
+      title,
+      body)
   }
 }

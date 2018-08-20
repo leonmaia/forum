@@ -3,6 +3,7 @@ package com.scale.forum.integration.helpers
 import com.google.inject.Key
 import com.google.inject.name.Names
 import com.scale.forum.provider.DatabaseProvider
+import com.scale.forum.server.migration.MigrationHandler
 import com.twitter.finagle.postgres.PostgresClient
 import com.twitter.finagle.stats.NullStatsReceiver
 import com.twitter.finagle.stats.StatsReceiver
@@ -23,10 +24,10 @@ object InjectorProvider {
   import Postgres.container
 
   lazy val dbConfig = Map(
-    "forumdb.host"           -> container.host,
-    "forumdb.port"           -> container.port.toString,
-    "forumdb.user"           -> container.username,
-    "forumdb.password"       -> container.password
+    "forumdb.host" -> container.host,
+    "forumdb.port" -> container.port.toString,
+    "forumdb.user" -> container.username,
+    "forumdb.password" -> container.password
   )
 
   val value: Injector =
@@ -43,9 +44,8 @@ trait DatabaseTest extends FunSpec with IntegrationTestMixin with Logging with M
     injector.instance(Key.get(classOf[PostgresClient], Names.named("forumdb")))
 
   def setupDatabase(): Unit = {
-    Await.result(createSchema().handle {
-      case e =>
-    })
+    createSchema().handle()
+
   }
 
   def resetDatabase(): Unit = {
@@ -54,16 +54,10 @@ trait DatabaseTest extends FunSpec with IntegrationTestMixin with Logging with M
     })
   }
 
+  private lazy val forumMigration = injector.instance[MigrationHandler]
+
   private def createSchema() = {
-    forumDB.prepareAndExecute("""
-                                     |CREATE TABLE topic (
-                                     |    id uuid,
-                                     |    email VARCHAR(100),
-                                     |    title VARCHAR(100),
-                                     |    body VARCHAR(200),
-                                     |    timestamp timestamp
-                                     |);
-                                   """.stripMargin)
+    forumMigration
   }
 
   private def deleteAllData() = {

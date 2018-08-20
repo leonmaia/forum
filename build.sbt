@@ -12,7 +12,6 @@ lazy val versions = new {
   val guice = "4.0"
   val logback = "1.1.7"
   val finagleMetrics = "0.0.10"
-  val datadog = "1.1.13"
 }
 
 scalacOptions ++= Seq(
@@ -52,14 +51,17 @@ assemblyMergeStrategy in assembly := {
   case other => MergeStrategy.defaultMergeStrategy(other)
 }
 
-assemblyJarName in assembly := s"scale.jar"
+assemblyJarName in assembly := s"forum.jar"
 
 libraryDependencies ++= Seq(
-
-  "com.twitter" %% "finatra-http" % versions.finatra,
+  "com.twitter" %% "finatra-http" % versions.finatra exclude("commons-logging", "commons-logging"),
   "com.twitter" %% "finatra-httpclient" % versions.finatra,
   "ch.qos.logback" % "logback-classic" % versions.logback,
   "io.github.finagle" %% "finagle-postgres" % "0.7.0",
+
+  "io.github.nafg" %% "slick-migration-api" % "0.4.2",
+  "com.1on1development" %% "slick-migration-api-flyway" % "0.4.1",
+  "org.postgresql" % "postgresql" % "42.2.4",
 
   "com.twitter" %% "finatra-http" % versions.finatra % "test",
   "com.twitter" %% "finatra-jackson" % versions.finatra % "test",
@@ -81,3 +83,11 @@ libraryDependencies ++= Seq(
   "org.specs2" %% "specs2-mock" % "2.4.17" % "test",
   "org.testcontainers" % "postgresql" % "1.8.3" % "test"
 )
+
+val forumDBHost = Option(System.getProperty("forumdb.host")).getOrElse("localhost")
+val forumDBPort = Option(System.getProperty("forumdb.port")).getOrElse("5432")
+
+TaskKey[Unit]("start") := (runMain in Compile)
+  .toTask(
+    s" -DLOG_DIR=. com.scale.forum.server.ServerMain -http.port=:7719 -forumdb.host=$forumDBHost -forumdb.port=$forumDBPort -forumdb.name=forum -forumdb.user=user -forumdb.password=pass")
+  .value

@@ -5,7 +5,7 @@ import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
 import javax.inject.Inject
 
-class TopicsController @Inject()(topics: TopicsService) extends Controller {
+class TopicController @Inject()(topics: TopicService) extends Controller {
 
   post("/topics") { topic: TopicPostRequest =>
     topics.save(topic).map(response.created)

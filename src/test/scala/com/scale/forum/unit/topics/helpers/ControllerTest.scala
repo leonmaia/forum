@@ -44,6 +44,7 @@ trait ControllerTest extends FunSpec with Mockito with FeatureTestMixin with Htt
   override val server: EmbeddedHttpServer = new EmbeddedHttpServer(
     twitterServer = new Server {
       override val modules = Seq()
+      override def warmup(): Unit  = {}
     },
     disableTestLogging = true,
     stage = Stage.DEVELOPMENT,

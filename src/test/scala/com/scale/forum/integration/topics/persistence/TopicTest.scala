@@ -1,15 +1,18 @@
 package com.scale.forum.integration.topics.persistence
 
-import java.util.UUID
-
 import com.scale.forum.integration.helpers.DatabaseTest
 import com.scale.forum.topics.domain.Topic
 import com.scale.forum.topics.persistence.Topics
 import com.twitter.util.Await.result
 
-class TopicsTest extends DatabaseTest {
+class TopicTest extends DatabaseTest {
 
   setupDatabase()
+
+  val topics = Seq(
+    Topic(Option.empty, "leon@gmail.com", "Test Title", "Is this a test?"),
+    Topic(Option.empty, "leon@gmail.com", "Something Fun", "What?")
+  )
 
   override def beforeEach() = {
     resetDatabase()
@@ -19,25 +22,25 @@ class TopicsTest extends DatabaseTest {
 
   describe("adding topics") {
     it("should add a topic") {
-      val topic = Topic(UUID.randomUUID(), "leon@gmail.com", "Test Title", "Is this a test?")
-
-      result(repo.add(topic)) shouldBe 1
+      result(repo.add(topics.head)) shouldBe 1
     }
   }
 
 
   describe("listing topics") {
     it("should list all topics") {
-      val topics = Seq(
-        Topic(UUID.randomUUID(), "leon@gmail.com", "Test Title", "Is this a test?"),
-        Topic(UUID.randomUUID(), "leon@gmail.com", "Something Fun", "What?")
-      )
       topics.foreach(topic => result(repo.add(topic)))
 
       val resultTopics = result(repo.list())
       resultTopics.length shouldBe 2
-      resultTopics.head shouldBe topics.last
-      resultTopics.last shouldBe topics.head
+    }
+
+    it("should list all topics in descending order") {
+      topics.foreach(topic => result(repo.add(topic)))
+
+      val resultTopics = result(repo.list())
+      resultTopics.length shouldBe 2
+      (resultTopics.head.id.get > resultTopics.last.id.get) shouldBe true
     }
   }
 }

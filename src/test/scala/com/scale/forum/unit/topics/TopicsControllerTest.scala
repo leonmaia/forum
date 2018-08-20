@@ -1,17 +1,15 @@
 package com.scale.forum.unit.topics
 
-import java.util.UUID
-
 import com.scale.forum.topics.domain.Topic
 import com.scale.forum.unit.topics.helpers.ControllerTest
 import com.twitter.finagle.http.Status._
 import com.twitter.util.Future
 
-class TopicsControllerTest extends ControllerTest {
+class TopicControllerTest extends ControllerTest {
 
   val topics = List(
-    Topic(UUID.randomUUID(), "leon@gmail.com", "Test Title", "Is this a test?"),
-    Topic(UUID.randomUUID(), "leon@gmail.com", "Serious Title", "Why so serious?")
+    Topic(Option(1), "leon@gmail.com", "Test Title", "Is this a test?"),
+    Topic(Option(2), "leon@gmail.com", "Serious Title", "Why so serious?")
   )
 
   describe("adding topics") {

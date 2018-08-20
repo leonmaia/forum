@@ -6,7 +6,7 @@ import com.scale.forum.topics.persistence.Topics
 import com.twitter.util.Future
 import javax.inject.Inject
 
-case class TopicsService @Inject()(topics: Topics) {
+case class TopicService @Inject()(topics: Topics) {
 
   def list(): Future[Seq[Topic]] = topics.list()
 
