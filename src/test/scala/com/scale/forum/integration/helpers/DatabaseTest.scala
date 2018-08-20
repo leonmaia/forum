@@ -21,6 +21,7 @@ object Postgres {
 }
 
 object InjectorProvider {
+
   import Postgres.container
 
   lazy val dbConfig = Map(
@@ -48,19 +49,9 @@ trait DatabaseTest extends FunSpec with IntegrationTestMixin with Logging with M
 
   }
 
-  def resetDatabase(): Unit = {
-    Await.result(deleteAllData().handle {
-      case e =>
-    })
-  }
-
   private lazy val forumMigration = injector.instance[MigrationHandler]
 
   private def createSchema() = {
     forumMigration
-  }
-
-  private def deleteAllData() = {
-    forumDB.prepareAndExecute("DELETE FROM topic;")
   }
 }

@@ -5,7 +5,7 @@ import com.scale.forum.topics.domain.Topic
 import com.scale.forum.topics.persistence.Topics
 import com.twitter.util.Await.result
 
-class TopicTest extends DatabaseTest {
+class TopicsTest extends DatabaseTest {
 
   setupDatabase()
 
@@ -14,32 +14,30 @@ class TopicTest extends DatabaseTest {
     Topic(Option.empty, "leon@gmail.com", "Something Fun", "What?")
   )
 
-  override def beforeEach() = {
-    resetDatabase()
-  }
-
   private val repo: Topics = Topics(forumDB)
+
+  topics.foreach(item => result(repo.add(item)))
 
   describe("adding topics") {
     it("should add a topic") {
-      result(repo.add(topics.head)) shouldBe 1
+      val newTopic = Topic(Option.empty, "leon@gmail.com", "Something cool", "Why??")
+      val resultTopic = result(repo.add(newTopic))
+
+      newTopic.body shouldBe resultTopic.body
+      newTopic.title shouldBe resultTopic.title
+      newTopic.email shouldBe resultTopic.email
     }
   }
 
 
   describe("listing topics") {
     it("should list all topics") {
-      topics.foreach(topic => result(repo.add(topic)))
-
       val resultTopics = result(repo.list())
-      resultTopics.length shouldBe 2
+      resultTopics.length >= 2 shouldBe true
     }
 
     it("should list all topics in descending order") {
-      topics.foreach(topic => result(repo.add(topic)))
-
       val resultTopics = result(repo.list())
-      resultTopics.length shouldBe 2
       (resultTopics.head.id.get > resultTopics.last.id.get) shouldBe true
     }
   }

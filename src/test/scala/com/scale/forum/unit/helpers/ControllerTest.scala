@@ -1,4 +1,4 @@
-package com.scale.forum.unit.topics.helpers
+package com.scale.forum.unit.helpers
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.databind.{ObjectMapper, PropertyNamingStrategy}
@@ -61,5 +61,4 @@ trait ControllerTest extends FunSpec with Mockito with FeatureTestMixin with Htt
   }
 
   protected val mockTopics: Topics = useMock[Topics]
-
 }

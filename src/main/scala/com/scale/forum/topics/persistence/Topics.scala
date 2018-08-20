@@ -8,12 +8,12 @@ import javax.inject.{Inject, Named, Singleton}
 
 @Singleton
 case class Topics @Inject()(@Named("forumdb") client: PostgresClient) extends Logging {
-  def add(t: Topic): Future[Int] = {
-    client.prepareAndExecute(
+  def add(t: Topic): Future[Topic] = {
+    client.prepareAndQuery(
       s"""
          | INSERT INTO topic(email, title, body)
-         | VALUES ('${t.email}', '${t.title}', '${t.body}')
-      """.stripMargin)
+         | VALUES ('${t.email}', '${t.title}', '${t.body}') RETURNING *
+      """.stripMargin)(rowToTopic).map(_.head)
   }
 
   def list(): Future[Seq[Topic]] = {

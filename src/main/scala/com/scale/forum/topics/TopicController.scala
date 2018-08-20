@@ -8,7 +8,7 @@ import javax.inject.Inject
 class TopicController @Inject()(topics: TopicService) extends Controller {
 
   post("/topics") { topic: TopicPostRequest =>
-    topics.save(topic).map(response.created)
+    topics.save(topic).map(response.created.body)
   }
 
   get("/topics") { _: Request =>

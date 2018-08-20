@@ -10,7 +10,7 @@ case class TopicService @Inject()(topics: Topics) {
 
   def list(): Future[Seq[Topic]] = topics.list()
 
-  def save(postedTopic: TopicPostRequest): Future[Int] = {
+  def save(postedTopic: TopicPostRequest): Future[Topic] = {
     topics.add(postedTopic.toDomain)
   }
 }

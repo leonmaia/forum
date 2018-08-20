@@ -1,7 +1,7 @@
 package com.scale.forum.unit.topics
 
 import com.scale.forum.topics.domain.Topic
-import com.scale.forum.unit.topics.helpers.ControllerTest
+import com.scale.forum.unit.helpers.ControllerTest
 import com.twitter.finagle.http.Status._
 import com.twitter.util.Future
 
@@ -14,7 +14,7 @@ class TopicControllerTest extends ControllerTest {
 
   describe("adding topics") {
     it("should return http 201 with topic") {
-      mockTopics.add(any) returns Future(1)
+      mockTopics.add(any) returns Future(topics.head)
 
       server.httpPost(
         path = "/topics",
@@ -26,7 +26,8 @@ class TopicControllerTest extends ControllerTest {
               "body": "Just a test"
             }
             """,
-        andExpect = Created
+        andExpect = Created,
+        withJsonBody = toJson(topics.head)
         )
     }
 
