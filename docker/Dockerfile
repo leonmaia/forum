@@ -1,5 +1,5 @@
 FROM openjdk:8u131-jre-alpine
-LABEL maintainer="Leon Maia leontmaia@tradeshift.com"
+LABEL maintainer="Leon Maia leontmaia@gmail.com"
 
 ARG VERSION_HASH=default
 LABEL version=$VERSION_HASH

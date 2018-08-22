@@ -3,12 +3,13 @@ services:
 
   api:
     image: scale/forum-service
-    command: java -jar forum.jar -http.port=:7719 -forumdb.host=forumdb -forumdb.user=user -forumdb.password=pass
+    command: java -jar forum.jar -http.port=:7719 -forumdb.host=forumdb -forumdb.user=user -forumdb.password=pass -redisdb.host=redisdb
     ports:
       - "7719:7719"
       - "9990:9990"
     depends_on:
       - forumdb
+      - redisdb
 
   forumdb:
     image: postgres:10-alpine
@@ -16,3 +17,6 @@ services:
       - POSTGRES_PASSWORD=pass
       - POSTGRES_USER=user
       - POSTGRES_DB=forum
+
+  redisdb:
+    image: redis:5.0-rc4-alpine
