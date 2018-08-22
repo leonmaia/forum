@@ -7,7 +7,7 @@ if [ $? -eq 0 ]; then
     docker rm -f ${current_id}
 fi
 
-docker run --name redisdb -p 6379:6379 -d redis:5.0-rc4-alpine
+docker run --name redisdb -p 6379:6379 -d redis:3.2.12-alpine
 
 port=`docker inspect -f '{{ (index (index .NetworkSettings.Ports "6379/tcp") 0).HostPort }}' redisdb`
 
