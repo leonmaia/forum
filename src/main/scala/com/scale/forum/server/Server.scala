@@ -1,6 +1,6 @@
 package com.scale.forum.server
 
-import com.scale.forum.provider.DatabaseProvider
+import com.scale.forum.provider.{DatabaseProvider, RedisProvider}
 import com.scale.forum.replies.ReplyController
 import com.scale.forum.server.migration.MigrationHandler
 import com.scale.forum.topics.TopicController
@@ -14,7 +14,7 @@ object ServerMain extends Server
 
 class Server extends HttpServer with Logging {
 
-  override val modules = Seq(DatabaseProvider)
+  override val modules = Seq(DatabaseProvider, RedisProvider)
 
   override def configureHttp(router: HttpRouter): Unit = {
     router

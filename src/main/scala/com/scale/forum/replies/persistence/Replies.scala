@@ -11,10 +11,10 @@ import javax.inject.{Inject, Named, Singleton}
 @Singleton
 case class Replies @Inject()(@Named("forumdb") client: PostgresClient) extends Logging {
   def add(t: Reply): Future[Int] = {
-      client.prepareAndExecute(
-        s"""
-           | INSERT INTO reply(email, body, topic_id)
-           | VALUES ('${t.email}', '${t.body}', '${t.topicId}')
+    client.prepareAndExecute(
+      s"""
+         | INSERT INTO reply(email, body, topic_id)
+         | VALUES ('${t.email}', '${t.body}', '${t.topicId}')
       """.stripMargin)
   }.handle {
     case e: ServerError =>
@@ -25,7 +25,7 @@ case class Replies @Inject()(@Named("forumdb") client: PostgresClient) extends L
   def list(topicId: Int): Future[Seq[Reply]] = {
     client.prepareAndQuery(
       s"""
-        | SELECT * FROM reply WHERE topic_id = $topicId
+         | SELECT * FROM reply WHERE topic_id = $topicId
       """.stripMargin
     )(rowToReply)
   }

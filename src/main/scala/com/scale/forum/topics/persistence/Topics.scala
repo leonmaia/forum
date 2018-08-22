@@ -1,5 +1,6 @@
 package com.scale.forum.topics.persistence
 
+import com.scale.forum.notifications.domain.Notification
 import com.scale.forum.topics.domain.Topic
 import com.twitter.finagle.postgres.{PostgresClient, Row}
 import com.twitter.inject.Logging
@@ -8,6 +9,7 @@ import javax.inject.{Inject, Named, Singleton}
 
 @Singleton
 case class Topics @Inject()(@Named("forumdb") client: PostgresClient) extends Logging {
+
   def add(t: Topic): Future[Topic] = {
     client.prepareAndQuery(
       s"""
@@ -15,6 +17,7 @@ case class Topics @Inject()(@Named("forumdb") client: PostgresClient) extends Lo
          | VALUES ('${t.email}', '${t.title}', '${t.body}') RETURNING *
       """.stripMargin)(rowToTopic).map(_.head)
   }
+
 
   def list(): Future[Seq[Topic]] = {
     client.prepareAndQuery(s"SELECT * FROM topic ORDER BY id DESC")(rowToTopic)

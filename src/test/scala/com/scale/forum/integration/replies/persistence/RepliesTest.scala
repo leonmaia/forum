@@ -10,7 +10,6 @@ import com.twitter.util.Await.result
 class RepliesTest extends DatabaseTest {
 
   setupDatabase()
-
   private val repoReplies = Replies(forumDB)
   private val repoTopics = Topics(forumDB)
 

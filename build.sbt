@@ -56,12 +56,15 @@ assemblyJarName in assembly := s"forum.jar"
 libraryDependencies ++= Seq(
   "com.twitter" %% "finatra-http" % versions.finatra exclude("commons-logging", "commons-logging"),
   "com.twitter" %% "finatra-httpclient" % versions.finatra,
+  "net.debasishg" %% "redisclient" % "3.7",
+
   "ch.qos.logback" % "logback-classic" % versions.logback,
   "io.github.finagle" %% "finagle-postgres" % "0.7.0",
 
   "io.github.nafg" %% "slick-migration-api" % "0.4.2",
   "com.1on1development" %% "slick-migration-api-flyway" % "0.4.1",
   "org.postgresql" % "postgresql" % "42.2.4",
+  "com.typesafe.akka" %% "akka-actor" % "2.5.14",
 
   "com.twitter" %% "finatra-http" % versions.finatra % "test",
   "com.twitter" %% "finatra-jackson" % versions.finatra % "test",
@@ -86,8 +89,9 @@ libraryDependencies ++= Seq(
 
 val forumDBHost = Option(System.getProperty("forumdb.host")).getOrElse("localhost")
 val forumDBPort = Option(System.getProperty("forumdb.port")).getOrElse("5432")
+val redisDBPort = Option(System.getProperty("redisdb.port")).getOrElse("6379")
 
 TaskKey[Unit]("start") := (runMain in Compile)
   .toTask(
-    s" -DLOG_DIR=. com.scale.forum.server.ServerMain -http.port=:7719 -forumdb.host=$forumDBHost -forumdb.port=$forumDBPort -forumdb.name=forum -forumdb.user=user -forumdb.password=pass")
+    s" -DLOG_DIR=. com.scale.forum.server.ServerMain -http.port=:7719 -forumdb.host=$forumDBHost -forumdb.port=$forumDBPort -forumdb.name=forum -forumdb.user=user -forumdb.password=pass -redisdb.port=$redisDBPort")
   .value

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.{ObjectMapper, PropertyNamingStrategy}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.google.inject.Stage
+import com.scale.forum.notifications.NotificationService
 import com.scale.forum.replies.persistence.Replies
 import com.scale.forum.server.Server
 import com.scale.forum.topics.persistence.Topics
@@ -64,5 +65,7 @@ trait ControllerTest extends FunSpec with Mockito with FeatureTestMixin with Htt
   protected val mockTopics: Topics = useMock[Topics]
 
   protected val mockReplies: Replies = useMock[Replies]
+
+  protected val mockNotifications: NotificationService = useMock[NotificationService]
 
 }
