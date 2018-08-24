@@ -1,6 +1,6 @@
 package com.scale.forum.topics.persistence
 
-import com.scale.forum.notifications.domain.Notification
+import com.scale.forum.http.pagination.Pagination
 import com.scale.forum.topics.domain.Topic
 import com.twitter.finagle.postgres.{PostgresClient, Row}
 import com.twitter.inject.Logging
@@ -9,6 +9,9 @@ import javax.inject.{Inject, Named, Singleton}
 
 @Singleton
 case class Topics @Inject()(@Named("forumdb") client: PostgresClient) extends Logging {
+  def get(id: Int): Future[Topic] = {
+    client.prepareAndQuery(s"SELECT * FROM topic WHERE id = $id LIMIT 1")(rowToTopic).map(_.head)
+  }
 
   def add(t: Topic): Future[Topic] = {
     client.prepareAndQuery(
@@ -19,8 +22,11 @@ case class Topics @Inject()(@Named("forumdb") client: PostgresClient) extends Lo
   }
 
 
-  def list(): Future[Seq[Topic]] = {
-    client.prepareAndQuery(s"SELECT * FROM topic ORDER BY id DESC")(rowToTopic)
+  def list(pagination: Pagination = Pagination()): Future[(Int, Seq[Topic])] = {
+    for {
+      entries <- client.prepareAndQuery(s"SELECT * FROM topic ORDER BY id DESC LIMIT ${pagination.limit} offset ${pagination.drops}")(rowToTopic)
+      count <- client.prepareAndQuery("SELECT COUNT(id)::int4 AS count from topic")(row => row.get[Int]("count")).map(_.head)
+    } yield (count, entries)
   }
 
   private def rowToTopic(row: Row): Topic = {

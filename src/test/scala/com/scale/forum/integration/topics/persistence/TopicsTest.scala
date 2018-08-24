@@ -33,12 +33,12 @@ class TopicsTest extends DatabaseTest {
   describe("listing topics") {
     it("should list all topics") {
       val resultTopics = result(repo.list())
-      resultTopics.length >= 2 shouldBe true
+      resultTopics._2.length >= 2 shouldBe true
     }
 
     it("should list all topics in descending order") {
       val resultTopics = result(repo.list())
-      (resultTopics.head.id.get > resultTopics.last.id.get) shouldBe true
+      (resultTopics._2.head.id.get > resultTopics._2.last.id.get) shouldBe true
     }
   }
 }

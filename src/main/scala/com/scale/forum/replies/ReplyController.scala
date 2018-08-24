@@ -9,8 +9,4 @@ class ReplyController @Inject()(replies: ReplyService) extends Controller {
   post("/replies") { reply: ReplyPostRequest =>
     replies.save(reply).map(response.created)
   }
-
-  get("/replies/:topic_id") { replyGetRequest: ReplyGetRequest =>
-    replies.list(replyGetRequest)
-  }
 }

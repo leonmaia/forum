@@ -1,15 +1,34 @@
 package com.scale.forum.topics
 
+import com.scale.forum.http.pagination.{PagedGetRequest, PagedResult, Pagination}
 import com.scale.forum.notifications.NotificationService
+import com.scale.forum.replies.ReplyService
+import com.scale.forum.replies.domain.Reply
 import com.scale.forum.topics.domain.Topic
-import com.scale.forum.topics.domain.http.TopicPostRequest
+import com.scale.forum.topics.domain.http.{PagedTopicGetRequest, TopicPostRequest}
 import com.scale.forum.topics.persistence.Topics
 import com.twitter.util.Future
 import javax.inject.Inject
 
-case class TopicService @Inject()(topics: Topics, notificationService: NotificationService) {
+case class TopicService @Inject()(topics: Topics, notificationService: NotificationService, replyService: ReplyService) {
 
-  def list(): Future[Seq[Topic]] = topics.list()
+  def getReplies(pagedTopicGetRequest: PagedTopicGetRequest): Future[PagedResult[Reply]] = {
+    val page = Pagination(pagedTopicGetRequest.page, pagedTopicGetRequest.limit)
+    replyService.list(pagedTopicGetRequest.id, page)
+  }
+
+  def get(pagedTopicGetRequest: PagedTopicGetRequest): Future[Topic] = {
+    topics.get(pagedTopicGetRequest.id)
+  }
+
+  def list(pagedGetRequest: PagedGetRequest): Future[PagedResult[Topic]] = {
+    val page = pagedGetRequest.toDomain
+    for {
+      (totalEntries, entries) <- topics.list(page)
+    } yield {
+      PagedResult[Topic](page, totalEntries, entries)
+    }
+  }
 
   def save(postedTopic: TopicPostRequest): Future[Topic] = {
     topics.add(postedTopic.toDomain)

@@ -42,7 +42,7 @@ class RepliesTest extends DatabaseTest {
       result(repoTopics.add(topic))
       replies.foreach(reply => result(repoReplies.add(reply)))
 
-      result(repoReplies.list(1)).length >= 2 shouldBe true
+      result(repoReplies.list(1))._2.length >= 2 shouldBe true
     }
   }
 }
