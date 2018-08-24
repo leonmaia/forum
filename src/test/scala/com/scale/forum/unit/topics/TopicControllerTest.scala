@@ -1,5 +1,7 @@
 package com.scale.forum.unit.topics
 
+import com.scale.forum.http.pagination.{PagedResult, Pagination}
+import com.scale.forum.replies.domain.Reply
 import com.scale.forum.topics.domain.Topic
 import com.scale.forum.unit.helpers.ControllerTest
 import com.twitter.finagle.http.Status._
@@ -28,7 +30,7 @@ class TopicControllerTest extends ControllerTest {
             """,
         andExpect = Created,
         withJsonBody = toJson(topics.head)
-        )
+      )
     }
 
     it("should return http 400 with errors object") {
@@ -56,12 +58,33 @@ class TopicControllerTest extends ControllerTest {
 
   describe("listing topics") {
     it("should return http 200 with topics") {
-      mockTopics.list() returns Future(topics)
+      val pagination = Pagination()
+      val pagedResult = PagedResult[Topic](pagination, topics.length, topics)
+      mockTopics.list(pagination) returns Future((topics.length, topics))
 
       server.httpGet(
-        path = "/topics",
+        path = "/topics?page=1",
         andExpect = Ok,
-        withJsonBody = toJson(topics)
+        withJsonBody = toJson(pagedResult)
+      )
+    }
+  }
+
+  describe("listing replies for a topic") {
+    it("should return http 200 with replies") {
+      val replies = Seq(
+        Reply(email = "leon@gmail.com", body = "I agree!", topicId = 1),
+        Reply(email = "leon@gmail.com", body = "I disagree!", topicId = 1)
+      )
+      val pagination = Pagination()
+      val pagedResult = PagedResult[Reply](pagination, topics.length, replies)
+
+      mockReplies.list(1, pagination) returns Future((replies.length, replies))
+
+      server.httpGet(
+        path = "/topics/1/replies?page=1",
+        andExpect = Ok,
+        withJsonBody = toJson(pagedResult)
       )
     }
   }

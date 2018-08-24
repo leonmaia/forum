@@ -47,20 +47,4 @@ class ReplyControllerTest extends ControllerTest {
       )
     }
   }
-
-  describe("listing replies") {
-    it("should return http 200 with replies") {
-      val replies = Seq(
-        Reply(email = "leon@gmail.com", body = "I agree!", topicId = 1),
-        Reply(email = "leon@gmail.com", body = "I disagree!", topicId = 1)
-      )
-      mockReplies.list(1) returns Future(replies)
-
-      server.httpGet(
-        path = "/replies/1",
-        andExpect = Ok,
-        withJsonBody = toJson(replies)
-      )
-    }
-  }
 }
