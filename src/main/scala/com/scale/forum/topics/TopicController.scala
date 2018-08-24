@@ -15,6 +15,10 @@ class TopicController @Inject()(service: TopicService) extends Controller {
     service.list(pagedGetRequest).map(response.ok(_))
   }
 
+  get("/topics/:id") { topicGetRequest: TopicGetRequest =>
+    service.get(topicGetRequest).map(response.ok(_))
+  }
+
   get("/topics/:id/replies") { pagedTopicGetRequest: PagedTopicGetRequest=>
     service.getReplies(pagedTopicGetRequest).map(response.ok(_))
   }
