@@ -2,7 +2,7 @@ version: '3'
 services:
 
   api:
-    image: scale/forum-service
+    image: leonmaia/forum-service
     command: java -jar forum.jar -http.port=:7719 -forumdb.host=forumdb -forumdb.user=user -forumdb.password=pass -redisdb.host=redisdb
     ports:
       - "7719:7719"

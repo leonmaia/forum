@@ -2,7 +2,7 @@
 
 # Images
 VERSION_HASH="$(git rev-parse HEAD)"
-IMAGE_NAME=scale/forum-service
+IMAGE_NAME=leonmaia/forum-service
 BASE_IMAGE_NAME=scale/forum-ci
 BUILD_IMAGE_NAME=scale/forum-build
 
