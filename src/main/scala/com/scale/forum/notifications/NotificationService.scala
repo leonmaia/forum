@@ -1,19 +1,22 @@
 package com.scale.forum.notifications
 
+import java.nio.charset.Charset
+
 import akka.actor.ActorSystem
-import com.redis.RedisClient
 import com.scale.forum.notifications.domain.Notification
 import com.scale.forum.notifications.persistence.Notifications
+import com.twitter.finagle.redis.Client
 import com.twitter.inject.Logging
-import com.twitter.util.{Future, FuturePool}
+import com.twitter.io.Buf
+import com.twitter.util.{Await, Future, FuturePool}
 import javax.inject.{Inject, Named, Singleton}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 @Singleton
-case class NotificationService @Inject()(@Named("redisdb") client: RedisClient, notifications: Notifications) extends Logging {
-  val LIMIT = 1000
+case class NotificationService @Inject()(@Named("redisdb") client: Client, notifications: Notifications) extends Logging {
+  val LIMIT = 1000l
   val TOPIC_QUEUE_NAME = "notify"
   val system = ActorSystem("NotificationSystem")
 
@@ -21,24 +24,24 @@ case class NotificationService @Inject()(@Named("redisdb") client: RedisClient, 
 
   def notifyUsers: Runnable = () => {
     FuturePool.unboundedPool {
-      while (isQueuePopulated()) {
-        client.blpop(1, TOPIC_QUEUE_NAME).map(_._2).map {
-          topicId =>
-            notifications.list(topicId.toInt) flatMap { emails =>
-              logMessage(emails)
-            }
+      while (Await.result(isQueuePopulated())) {
+        client.rPop(Buf.Utf8(TOPIC_QUEUE_NAME)) map { entry =>
+          val topicId = Buf.decodeString(entry.get, Charset.defaultCharset()).toInt
+          notifications.list(topicId) flatMap { emails =>
+            logMessage(emails)
+          }
         }
       }
     }
   }
 
-  def isQueuePopulated(name: String = TOPIC_QUEUE_NAME): Boolean = {
-    client.lrange(name, 0, LIMIT).get.nonEmpty
+  def isQueuePopulated(name: String = TOPIC_QUEUE_NAME): Future[Boolean]= {
+    client.lRange(Buf.Utf8(name), 0l, LIMIT).map(_.nonEmpty)
   }
 
   def add(topicId: Int, email: String): Future[Unit] = {
     notifications.add(Notification(topicId, email)).flatMap {
-      _ => Future(client.rpush(TOPIC_QUEUE_NAME, topicId)).unit
+      _ => Future(client.rPush(Buf.Utf8(TOPIC_QUEUE_NAME), List(Buf.Utf8(topicId.toString)))).unit
     }
   }.handle {
     case e: Exception =>

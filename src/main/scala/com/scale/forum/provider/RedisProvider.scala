@@ -1,8 +1,8 @@
 package com.scale.forum.provider
 
-
 import com.google.inject.name.Names
-import com.redis.RedisClient
+import com.twitter.finagle.Redis
+import com.twitter.finagle.redis.Client
 import com.twitter.inject.TwitterModule
 
 object RedisProvider extends TwitterModule {
@@ -11,10 +11,10 @@ object RedisProvider extends TwitterModule {
 
   protected override def configure(): Unit = {
     super.configure()
-    bindSingleton[RedisClient]
+    bindSingleton[Client]
       .annotatedWith(Names.named(s"redisdb"))
       .toInstance(
-        new RedisClient(host= host(), port = port().toInt)
+        Redis.newRichClient(s"${host()}:${port()}")
       )
   }
 }

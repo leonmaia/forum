@@ -21,10 +21,7 @@ object DatabaseProvider extends TwitterModule {
           .Client()
           .withCredentials(user(), Some(password()))
           .database(name())
-          .withSessionPool
-          .minSize(5)
-          .withSessionPool
-          .maxSize(10)
+          .withSessionPool.minSize(50)
           .withBinaryResults(true)
           .withBinaryParams(true)
           .withLabel(s"forumdb")

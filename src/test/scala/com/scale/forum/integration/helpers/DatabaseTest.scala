@@ -2,10 +2,10 @@ package com.scale.forum.integration.helpers
 
 import com.google.inject.Key
 import com.google.inject.name.Names
-import com.redis.RedisClient
 import com.scale.forum.provider.{DatabaseProvider, RedisProvider}
 import com.scale.forum.server.migration.MigrationHandler
 import com.twitter.finagle.postgres.PostgresClient
+import com.twitter.finagle.redis.Client
 import com.twitter.finagle.stats.{NullStatsReceiver, StatsReceiver}
 import com.twitter.inject.app.TestInjector
 import com.twitter.inject.{Injector, IntegrationTestMixin, Logging, Mockito}
@@ -50,8 +50,8 @@ trait DatabaseTest extends FunSpec with IntegrationTestMixin with Logging with M
   protected lazy val forumDB: PostgresClient =
     injector.instance(Key.get(classOf[PostgresClient], Names.named("forumdb")))
 
-  protected lazy val redisClient: RedisClient =
-    injector.instance(Key.get(classOf[RedisClient], Names.named("redisdb")))
+  protected lazy val redisClient: Client =
+    injector.instance(Key.get(classOf[Client], Names.named("redisdb")))
 
   def setupDatabase(): Unit = {
     createSchema().handle()

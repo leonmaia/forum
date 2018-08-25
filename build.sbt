@@ -56,7 +56,7 @@ assemblyJarName in assembly := s"forum.jar"
 libraryDependencies ++= Seq(
   "com.twitter" %% "finatra-http" % versions.finatra exclude("commons-logging", "commons-logging"),
   "com.twitter" %% "finatra-httpclient" % versions.finatra,
-  "net.debasishg" %% "redisclient" % "3.7",
+  "com.twitter" %% "finagle-redis" % versions.finatra,
 
   "ch.qos.logback" % "logback-classic" % versions.logback,
   "io.github.finagle" %% "finagle-postgres" % "0.7.0",
