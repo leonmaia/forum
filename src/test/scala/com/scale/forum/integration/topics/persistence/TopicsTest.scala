@@ -5,6 +5,8 @@ import com.scale.forum.topics.domain.Topic
 import com.scale.forum.topics.persistence.Topics
 import com.twitter.util.Await.result
 
+import scala.util.Random
+
 class TopicsTest extends DatabaseTest {
 
   setupDatabase()
@@ -39,6 +41,25 @@ class TopicsTest extends DatabaseTest {
     it("should list all topics in descending order") {
       val resultTopics = result(repo.list())
       (resultTopics._2.head.id.get > resultTopics._2.last.id.get) shouldBe true
+    }
+  }
+
+  describe("retrieving a topic") {
+    it("should get a topic") {
+      val newTopic = Topic(Option.empty, "leon@gmail.com", "Something cool", "Why??")
+      val topic = result(repo.add(newTopic))
+
+      val resultTopic = result(repo.get(topic.id.get)).get
+
+      newTopic.body shouldBe resultTopic.body
+      newTopic.title shouldBe resultTopic.title
+      newTopic.email shouldBe resultTopic.email
+    }
+
+    it("should return a empty option if topic doesnt exist") {
+      val resultTopic = result(repo.get(Random.nextInt))
+
+      resultTopic.isEmpty shouldBe true
     }
   }
 }

@@ -16,7 +16,10 @@ class TopicController @Inject()(service: TopicService) extends Controller {
   }
 
   get("/topics/:id") { topicGetRequest: TopicGetRequest =>
-    service.get(topicGetRequest).map(response.ok(_))
+    service.get(topicGetRequest) map {
+      case Some(topic) => response.ok(topic)
+      case None => response.notFound
+    }
   }
 
   get("/topics/:id/replies") { pagedTopicGetRequest: PagedTopicGetRequest=>

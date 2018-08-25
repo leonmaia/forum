@@ -2,6 +2,7 @@ package com.scale.forum.server
 
 import com.scale.forum.provider.{DatabaseProvider, RedisProvider}
 import com.scale.forum.replies.ReplyController
+import com.scale.forum.server.mappers.{IllegalArgumentExceptionMapper, PostgresServerErrorExceptionMapper}
 import com.scale.forum.server.migration.MigrationHandler
 import com.scale.forum.topics.TopicController
 import com.twitter.finagle.http.{Request, Response}
@@ -21,6 +22,8 @@ class Server extends HttpServer with Logging {
       .filter[LoggingMDCFilter[Request, Response]]
       .filter[TraceIdMDCFilter[Request, Response]]
       .filter[CommonFilters]
+      .exceptionMapper[IllegalArgumentExceptionMapper]
+      .exceptionMapper[PostgresServerErrorExceptionMapper]
       .add[TopicController]
       .add[ReplyController]
   }

@@ -9,8 +9,11 @@ import javax.inject.{Inject, Named, Singleton}
 
 @Singleton
 case class Topics @Inject()(@Named("forumdb") client: PostgresClient) extends Logging {
-  def get(id: Int): Future[Topic] = {
-    client.prepareAndQuery(s"SELECT * FROM topic WHERE id = $id LIMIT 1")(rowToTopic).map(_.head)
+  def get(id: Int): Future[Option[Topic]] = {
+    client.prepareAndQuery(s"SELECT * FROM topic WHERE id = $id LIMIT 1")(rowToTopic) map {
+      case entries if entries.isEmpty => Option.empty[Topic]
+      case entries if entries.nonEmpty => Option(entries.head)
+    }
   }
 
   def add(t: Topic): Future[Topic] = {

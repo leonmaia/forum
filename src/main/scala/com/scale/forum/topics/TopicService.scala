@@ -17,7 +17,7 @@ case class TopicService @Inject()(topics: Topics, notificationService: Notificat
     replyService.list(pagedTopicGetRequest.id, page)
   }
 
-  def get(topicGetRequest: TopicGetRequest): Future[Topic] = {
+  def get(topicGetRequest: TopicGetRequest): Future[Option[Topic]] = {
     topics.get(topicGetRequest.id)
   }
 

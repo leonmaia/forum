@@ -14,6 +14,27 @@ class TopicControllerTest extends ControllerTest {
     Topic(Option(2), "leon@gmail.com", "Serious Title", "Why so serious?")
   )
 
+  describe ("getting a topic") {
+    it("should return http 200 with topic when topic exist") {
+      mockTopics.get(1) returns Future(Option(topics.head))
+
+      server.httpGet(
+        path = "/topics/1",
+        andExpect = Ok,
+        withJsonBody = toJson(topics.head)
+      )
+    }
+
+    it("should return http 200 with no topic when topic does not exist") {
+      mockTopics.get(any) returns Future(Option.empty)
+
+      server.httpGet(
+        path = "/topics/102303",
+        andExpect = NotFound
+      )
+    }
+  }
+
   describe("adding topics") {
     it("should return http 201 with topic") {
       mockTopics.add(any) returns Future(topics.head)
@@ -30,6 +51,25 @@ class TopicControllerTest extends ControllerTest {
             """,
         andExpect = Created,
         withJsonBody = toJson(topics.head)
+      )
+    }
+
+    it("should return http 400 when topic is not valid") {
+      val topic = Topic(email = "", title = "", body = "")
+
+      server.httpPost(
+        path = "/topics",
+        postBody = toJson(topic),
+        andExpect = BadRequest,
+        withJsonBody =
+          """
+          {
+            "errors": [
+              "email: cannot be empty",
+              "title: cannot be empty"
+            ]
+          }
+          """
       )
     }
 
