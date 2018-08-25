@@ -23,4 +23,4 @@ docker build --build-arg VERSION_HASH=${VERSION_HASH} -f docker/Dockerfile -t ${
 # Add version (tag: <version>)
 docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${VERSION_HASH}
 
-docker push leonmaia/${IMAGE_NAME}:latest
+docker push ${IMAGE_NAME}:latest
