@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.1.0 (36652f6)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: api
+  name: api
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: api
+    spec:
+      containers:
+      - args:
+        - java
+        - -jar
+        - forum.jar
+        - -http.port=:7719
+        - -forumdb.host=forumdb
+        - -forumdb.user=user
+        - -forumdb.password=pass
+        - -redisdb.host=redisdb
+        imagePullPolicy: Always
+        image: leonmaia/forum-service:latest
+        name: api
+        resources: {}
+      restartPolicy: Always
+status: {}

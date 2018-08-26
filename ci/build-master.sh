@@ -13,7 +13,7 @@ docker build -f docker-ci/Dockerfile -t ${BASE_IMAGE_NAME} .
 docker build -f docker-ci/Dockerfile.build -t ${BUILD_IMAGE_NAME} .
 
 # create jar
-docker run -v `pwd`:/opt/build ${BUILD_IMAGE_NAME} sbt assembly
+docker run -v `pwd`:/opt/build ${BUILD_IMAGE_NAME} sbt clean assembly
 
 docker rmi -f ${BUILD_IMAGE_NAME}
 
