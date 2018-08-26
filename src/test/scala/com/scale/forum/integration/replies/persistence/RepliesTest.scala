@@ -29,10 +29,10 @@ class RepliesTest extends DatabaseTest {
 
     it("should fail if topic does not exist") {
       val erroredReply = Reply(email = "leon@gmail.com", body = "I disagree!", topicId = 10)
-      val thrown = intercept[TopicNotFound] {
+      val thrown = intercept[IllegalArgumentException] {
         result(repoReplies.add(erroredReply))
       }
-       thrown.getMessage shouldBe TopicNotFound(erroredReply.topicId).getMessage
+       thrown.getMessage shouldBe "topic with id: 10 does not exist."
     }
   }
 

@@ -20,7 +20,7 @@ case class Replies @Inject()(@Named("forumdb") client: PostgresClient) extends L
   }.handle {
     case e: ServerError =>
       logger.error(e.message)
-      throw new IllegalArgumentException(s"topic with id: ${t.id.toString} does not exist.")
+      throw new IllegalArgumentException(s"topic with id: ${t.topicId.toString} does not exist.")
   }
 
   def list(topicId: Int, pagination: Pagination = Pagination()): Future[(Int, Seq[Reply])] = {
